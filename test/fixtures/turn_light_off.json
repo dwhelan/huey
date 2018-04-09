@@ -1,7 +1,7 @@
 [
   {
     "request": {
-      "body": "{\"on\":true}",
+      "body": "{\"on\":false}",
       "headers": [],
       "method": "put",
       "options": [],
@@ -9,10 +9,10 @@
       "url": "http://192.168.0.111/api/FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512/lights/1/state"
     },
     "response": {
-      "body": "[{\"success\":{\"/lights/1/state/on\":true}}]",
+      "body": "[{\"success\":{\"/lights/1/state/on\":false}}]",
       "headers": {
         "Server": "nginx",
-        "Date": "Mon, 09 Apr 2018 20:57:26 GMT",
+        "Date": "Mon, 09 Apr 2018 21:00:16 GMT",
         "Content-Type": "application/json",
         "Connection": "close",
         "Cache-Control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",

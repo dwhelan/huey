@@ -5,8 +5,12 @@ defmodule Huey.Bridge do
                |> Huex.authorize(devicetype)
 
     case response.status do
-      :error  -> {:error, response.error["description"]}
-      _       -> {:ok, response.username}
+      :error -> {:error, response.error["description"]}
+      _ -> {:ok, response.username}
     end
+  end
+
+  def connect(ip, username) do
+    {:ok, Huex.connect(ip, username)}
   end
 end
