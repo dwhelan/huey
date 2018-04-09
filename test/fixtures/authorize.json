@@ -1,0 +1,31 @@
+[
+  {
+    "request": {
+      "body": "{\"devicetype\":\"foobar\"}",
+      "headers": [],
+      "method": "post",
+      "options": [],
+      "request_body": "",
+      "url": "http://192.168.0.111/api"
+    },
+    "response": {
+      "body": "[{\"success\":{\"username\":\"FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512\"}}]",
+      "headers": {
+        "Server": "nginx",
+        "Date": "Mon, 09 Apr 2018 19:47:51 GMT",
+        "Content-Type": "application/json",
+        "Connection": "close",
+        "Cache-Control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+        "Pragma": "no-cache",
+        "Expires": "Mon, 1 Aug 2011 09:00:00 GMT",
+        "Access-Control-Max-Age": "3600",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
+        "Access-Control-Allow-Headers": "Content-Type"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]

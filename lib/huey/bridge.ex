@@ -1,8 +1,13 @@
 defmodule Huey.Bridge do
   def authorize(ip, devicetype) do
-    ip
+    response = ip
     |> Huex.connect()
     |> Huex.authorize(devicetype)
-#    "xOYF2J7wjNk7SP2ddvqJLCwa10I8OTQO5R1hVofb"
+
+    if response.status == :error do
+      {:error, response.error.description}
+    else
+      {:ok, response.username}
+    end
   end
 end
