@@ -16,11 +16,15 @@ defmodule Huey do
     :world
   end
 
-  def fact(0) do
-    1
+  def fact(n) do
+    do_fact(n, 1)
   end
 
-  def fact(n) do
-    n * fact(n-1)
+  defp do_fact(0, acc) do
+    acc
+  end
+
+  defp do_fact(n, acc) do
+    do_fact(n-1, n * acc)
   end
 end
