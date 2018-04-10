@@ -12,6 +12,6 @@ end
 #   http server -
 #
 # Activate scene
-# POST http://host/scene/blue_jays/activate - activates a scene
+# GET http://host/activatescene/blue_jays - activates a scene
 #
 # GET  http://host/scene/blue_jays - retrieve a scene

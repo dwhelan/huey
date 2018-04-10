@@ -1,30 +1,16 @@
 defmodule Huey do
-  @moduledoc """
-  Documentation for Huey.
-  """
+  use Application
 
-  @doc """
-  Hello world.
+  @name Huey
 
-  ## Examples
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
 
-      iex> Huey.hello
-      :world
+    children = [
+      worker(Huey.Router, [])
+    ]
 
-  """
-  def hello do
-    :world
-  end
-
-  def fact(n) do
-    do_fact(n, 1)
-  end
-
-  defp do_fact(0, acc) do
-    acc
-  end
-
-  defp do_fact(n, acc) do
-    do_fact(n-1, n * acc)
+    opts = [strategy: :one_for_one, name: @name]
+    Supervisor.start_link(children, opts)
   end
 end
