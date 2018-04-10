@@ -19,6 +19,11 @@ defmodule Huey.Light do
     |> handle_response
   end
 
+  def set_brightness(bridge, light_number, brightness) do
+    bridge
+    |> Huex.set_brightness(light_number, brightness)
+    |> handle_response
+  end
 
   def hue_to_int(hue) when hue < 0 do
     hue_to_int(360 + hue)

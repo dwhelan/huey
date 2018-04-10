@@ -41,10 +41,15 @@ defmodule Huey.LightTest do
 
   test "can change the color of a light" do
     use_cassette "change_color" do
-      assert {:ok, response} = TF.bridge
+      assert {:ok, _} = TF.bridge
                         |> Light.set_color(1, {15, 254, 254})
+    end
+  end
 
-      IO.inspect response
+  test "can set brightness of a light" do
+    use_cassette "change_brightness" do
+      assert {:ok, _} = TF.bridge
+                        |> Light.set_brightness(1, 0.99)
     end
   end
 
