@@ -24,6 +24,7 @@ defmodule Huey.LightTest do
     end
   end
 
+
   test "can turn a light off" do
     use_cassette "turn_light_off" do
       assert {:ok, _} = TF.bridge
@@ -33,9 +34,15 @@ defmodule Huey.LightTest do
 
   test "cannot turn off light that doesn't exist" do
     use_cassette "turn_bad_light_off" do
-      assert {:error, _} = TF.bridge
-                           |> Light.turn_off(42)
+      assert {:error, "resource, /lights/42/state, not available"} = TF.bridge
+                                                                     |> Light.turn_off(42)
     end
   end
 
+  test "can change the color of a light" do
+    use_cassette "change_color" do
+      TF.bridge
+      |> Light.set_color(1, {15, 254, 254})
+    end
+  end
 end
