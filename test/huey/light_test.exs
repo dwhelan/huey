@@ -12,8 +12,11 @@ defmodule Huey.LightTest do
 
   test "can turn a light on" do
     use_cassette "turn_light_on" do
-      assert {:ok, _} = TF.bridge
-                        |> Light.turn_on(1)
+      assert {:ok, _} = Light.turn_on(TF.bridge, 1)
+
+      light = %Huey.Light{bridge: TF.bridge(), number: 1, on: false}
+      assert {:ok, light} = Light.turn_on(light)
+      assert light.on == true
     end
   end
 

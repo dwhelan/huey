@@ -18,8 +18,7 @@ defmodule Huey.Router do
 
   get "/activatescene/blue_jays" do
     response = Huey.SceneServer.activate("blue_jays")
-    json = Poison.encode!(response)
-    send_resp(conn, 200, json)
+    send_resp(conn, 200, "lights updated")
   end
 
   post "/hello" do

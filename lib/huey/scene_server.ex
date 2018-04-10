@@ -14,22 +14,13 @@ defmodule Huey.SceneServer do
     GenServer.call(@name, {:activate, scene_name})
   end
 
-  def create(scene) do
-    GenServer.cast(@name, {:create, scene})
-  end
-
-#  defstruct [number: 0, color: nil, brightness: 1.0, on: true]
-#
-#  defmodule Huey.Scene do
-#  defstruct [name: "", light_states: []]
-
 
   # Callbacks
   def init(_state) do
     light_state = [
       %LightState{number: 1, color: {240, 254, 254}},
-      %LightState{number: 3, color: {0, 254, 254}},
-      %LightState{number: 4, color: {252, 254, 200}},
+      %LightState{number: 3, color: {  0, 254, 150}},
+      %LightState{number: 4, color: {260, 254, 150}},
       %LightState{number: 5, color: {240, 254, 254}}
     ]
     state = %Scene{name: "blue_jays", light_states: light_state}
@@ -37,15 +28,8 @@ defmodule Huey.SceneServer do
   end
 
   def handle_call({:activate, _scene_name}, _from, state) do
-    bridge = bridge()
-    Enum.each()
-    {:ok, response} = Light.set_color(bridge, 4, {252, 254, 200})
-    {:reply, response, state}
-  end
-
-  def handle_cast({:create, _scene}, _from, state) do
-    # do what we need to do
-    {:noreply, state}
+    Enum.each(state.light_states, fn (light_state) -> update_light(light_state) end)
+    {:reply, :ok, state}
   end
 
   defp bridge do
@@ -53,4 +37,7 @@ defmodule Huey.SceneServer do
     bridge
   end
 
+  defp update_light(light_state) do
+    Light.set_color(bridge(), light_state.number, light_state.color)
+  end
 end
