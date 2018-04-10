@@ -1,7 +1,7 @@
 [
   {
     "request": {
-      "body": "{\"sat\":254,\"on\":true,\"hue\":8190,\"bri\":254}",
+      "body": "{\"sat\":254,\"on\":true,\"hue\":2730,\"bri\":254}",
       "headers": [],
       "method": "put",
       "options": [],
@@ -9,10 +9,10 @@
       "url": "http://192.168.0.111/api/FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512/lights/1/state"
     },
     "response": {
-      "body": "[{\"success\":{\"/lights/1/state/on\":true}},{\"success\":{\"/lights/1/state/hue\":8190}},{\"success\":{\"/lights/1/state/sat\":254}},{\"success\":{\"/lights/1/state/bri\":254}}]",
+      "body": "[{\"success\":{\"/lights/1/state/on\":true}},{\"success\":{\"/lights/1/state/hue\":2730}},{\"success\":{\"/lights/1/state/sat\":254}},{\"success\":{\"/lights/1/state/bri\":254}}]",
       "headers": {
         "Server": "nginx",
-        "Date": "Tue, 10 Apr 2018 15:25:51 GMT",
+        "Date": "Tue, 10 Apr 2018 16:03:21 GMT",
         "Content-Type": "application/json",
         "Connection": "close",
         "Cache-Control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",

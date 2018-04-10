@@ -41,8 +41,18 @@ defmodule Huey.LightTest do
 
   test "can change the color of a light" do
     use_cassette "change_color" do
-      TF.bridge
-      |> Light.set_color(1, {15, 254, 254})
+      assert {:ok, response} = TF.bridge
+                        |> Light.set_color(1, {15, 254, 254})
+
+      IO.inspect response
     end
+  end
+
+  test "converts angle to Hue integer" do
+    assert Light.hue_to_int(0) == 0
+    assert Light.hue_to_int(1) == 182
+    assert Light.hue_to_int(360) == 0
+    assert Light.hue_to_int(-15) == Light.hue_to_int(345)
+    assert Light.hue_to_int(-375) == Light.hue_to_int(345)
   end
 end
