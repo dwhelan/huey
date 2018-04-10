@@ -4,6 +4,8 @@ defmodule Huey.SceneServer do
 
   use GenServer
 
+  alias Huey.{Bridge, Light, LightState, Scene}
+
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], name: @name)
   end
@@ -16,14 +18,25 @@ defmodule Huey.SceneServer do
     GenServer.cast(@name, {:create, scene})
   end
 
+#  defstruct [number: 0, color: nil, brightness: 1.0, on: true]
+#
+#  defmodule Huey.Scene do
+#  defstruct [name: "", light_states: []]
+
+
   # Callbacks
   def init(state) do
+    light_state = [
+    %LightState{}
+    ]
+
     {:ok, state}
   end
 
   def handle_call({:activate, scene_name}, _from, state) do
-    # Do my work
-    IO.puts "I am activated!!!"
+    {:ok, bridge} = Bridge.connect("192.168.0.111", "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512")
+    Light.set_color(bridge, 3, {225, 254, 254})
+
     {:reply, :ok, state}
   end
 
