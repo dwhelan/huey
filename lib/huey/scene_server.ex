@@ -27,13 +27,13 @@ defmodule Huey.SceneServer do
       %LightState{number: 4, color: %{h: 260, s: 254, b: 150}},
       %LightState{number: 5, color: %{h: 240, s: 254, b: 254}}
     ]
-    state = %{"blue_jays" => light_states}
+    state = %{blue_jays: light_states}
     {:ok, state}
   end
 
   def handle_call({:activate, scene_name}, _from, state) do
     light_states = state[scene_name]
-    Enum.each(light_states, fn (light_state) -> update_light(light_state) end)
+    Enum.each(light_states, fn(light_state) -> update_light(light_state) end)
     {:reply, :ok, state}
   end
 
