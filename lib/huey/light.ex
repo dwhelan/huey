@@ -19,12 +19,6 @@ defmodule Huey.Light do
     |> handle_response(light)
   end
 
-  def set_color(light, {hue, sat, bri}) do
-    light.bridge
-    |> Huex.set_color(light.number, {hue_to_int(hue), sat, bri})
-    |> handle_response(light)
-  end
-
   def set_color(light, %{h: h, s: s, b: b} = color) do
     light.bridge
     |> Huex.set_color(light.number, {hue_to_int(h), s, b})

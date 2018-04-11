@@ -22,21 +22,12 @@ defmodule Huey.Router do
   end
 
   post "/createscene" do
-    IO.inspect conn
-    IO.inspect conn.body_params
-    {status, body} =
-      case conn.body_params do
-        %{"name" => name} -> {200, say_hello(name)}
-        _ -> {422, missing_name()}
-      end
-    send_resp(conn, status, body)
-  end
-
-  defp say_hello(name) do
-    Poison.encode!(%{response: "Hello, #{name}!"})
-  end
-
-  defp missing_name do
-    Poison.encode!(%{error: "Expected a \"name\" key"})
+    body = conn.body_params
+    {:ok, json_string} = Poison.encode(body)
+    IO.inspect json_string
+    {:ok, scene} = Poison.decode(json_string, as: :atoms!)
+    IO.inspect scene
+    response = Huey.SceneServer.create(scene)
+    send_resp(conn, 200, "thanks")
   end
 end

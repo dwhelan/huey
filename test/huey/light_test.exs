@@ -36,12 +36,6 @@ defmodule Huey.LightTest do
 
   test "can change the color of a light" do
     use_cassette "change_color" do
-      assert {:ok, %Light{}} = Light.set_color(test_light(), {15, 254, 254})
-    end
-  end
-
-  test "can change the color of a light via hsb map" do
-    use_cassette "change_color" do
       assert {:ok, %Light{}} = Light.set_color(test_light(), %{h: 15, s: 254, b: 254})
     end
   end

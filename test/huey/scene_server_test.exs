@@ -11,10 +11,10 @@ defmodule Huey.SceneServerTest do
 
   setup do
     light_states = [
-      %LightState{number: 1, color: {240, 254, 254}},
-      %LightState{number: 3, color: {0, 254, 150}},
-      %LightState{number: 4, color: {260, 254, 150}},
-      %LightState{number: 5, color: {240, 254, 254}}
+      %LightState{number: 1, color: %{h: 240, s: 254, b: 254}},
+      %LightState{number: 3, color: %{h: 0, s: 254, b: 150}},
+      %LightState{number: 4, color: %{h: 260, s: 254, b: 150}},
+      %LightState{number: 5, color: %{h: 240, s: 254, b: 254}}
     ]
     state = %{"blue_jays" => light_states}
 
@@ -30,10 +30,10 @@ defmodule Huey.SceneServerTest do
 
   test "can create a new scene", context do
     light_states = [
-      %LightState{number: 1, color: {0, 254, 150}},
-      %LightState{number: 3, color: {0, 0, 254}},
-      %LightState{number: 4, color: {0, 0, 254}},
-      %LightState{number: 5, color: {0, 254, 150}}
+      %LightState{number: 1, color: %{h: 0, s: 254, b: 150}},
+      %LightState{number: 3, color: %{h: 0, s: 0,   b: 254}},
+      %LightState{number: 4, color: %{h: 0, s: 0,   b: 254}},
+      %LightState{number: 5, color: %{h: 0, s: 254, b: 150}}
     ]
     new_scene = %{"oh_canada" => light_states}
     {_, _, updated_state} = SceneServer.handle_call({:create, new_scene}, [], context[:state])
