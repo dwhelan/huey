@@ -37,6 +37,6 @@ defmodule Huey.SceneServerTest do
     ]
     new_scene = %{"oh_canada" => light_states}
     {_, _, updated_state} = SceneServer.handle_call({:create, new_scene}, [], context[:state])
-    assert updated_state["oh_canada"] == new_scene
+    assert updated_state["oh_canada"] == light_states
   end
 end

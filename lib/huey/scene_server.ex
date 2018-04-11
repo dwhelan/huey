@@ -37,6 +37,11 @@ defmodule Huey.SceneServer do
     {:reply, :ok, state}
   end
 
+  def handle_call({:create, scene}, _from, state) do
+    new_state = Map.merge(state, scene)
+    {:reply, :ok, new_state}
+  end
+
   defp bridge do
     {:ok, bridge} = Bridge.connect("192.168.0.111", "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512")
     bridge

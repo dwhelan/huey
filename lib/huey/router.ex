@@ -21,7 +21,9 @@ defmodule Huey.Router do
     send_resp(conn, 200, "lights updated")
   end
 
-  post "/hello" do
+  post "/createscene" do
+    IO.inspect conn
+    IO.inspect conn.body_params
     {status, body} =
       case conn.body_params do
         %{"name" => name} -> {200, say_hello(name)}
