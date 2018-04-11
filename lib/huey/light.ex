@@ -1,5 +1,33 @@
 defmodule Huey.Light do
+  defstruct [bridge: nil, number: 0]
+
   @one_degree 65536 / 360
+
+  def create(bridge, number) do
+    %Huey.Light{bridge: bridge, number: number}
+  end
+
+  def turn_on(light) do
+    light.bridge
+    |> Huex.turn_on(light.number)
+    |> handle_response(light)
+  end
+
+  def turn_off(light) do
+    light.bridge
+    |> Huex.turn_off(light.number)
+    |> handle_response(light)
+  end
+
+  defp handle_response(%{status: :error} = response, _light) do
+    {:error, response.error["description"]}
+  end
+
+  defp handle_response(response, light) do
+    {:ok, light}
+  end
+
+  # These should be deleted once all functions use a Light
 
   def turn_on(bridge, light_number) do
     bridge

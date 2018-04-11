@@ -1,6 +1,6 @@
 defmodule Huey.LightTest do
   use ExUnit.Case, asnyc: true
-  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney
+  use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney, clear_mock: true
 
   alias Huey.Light
   alias TestFixture, as: TF
@@ -12,11 +12,23 @@ defmodule Huey.LightTest do
 
   test "can turn a light on" do
     use_cassette "turn_light_on" do
-      assert {:ok, _} = Light.turn_on(TF.bridge, 1)
+      light = Light.create(TF.bridge(), 1)
+      assert {:ok, %Light{}} = Light.turn_on(light)
+    end
+  end
 
-      light = %Huey.Light{bridge: TF.bridge(), number: 1, on: false}
-      assert {:ok, light} = Light.turn_on(light)
-      assert light.on == true
+  test "can turn a light off" do
+    use_cassette "turn_light_off" do
+      light = Light.create(TF.bridge(), 1)
+      assert {:ok, %Light{}} = Light.turn_off(light)
+    end
+  end
+
+  # Replace tests below with updated ones to use Light struct
+
+  test "can turn a light on - old" do
+    use_cassette "turn_light_on" do
+      assert {:ok, _} = Light.turn_on(TF.bridge, 1)
     end
   end
 
@@ -28,7 +40,7 @@ defmodule Huey.LightTest do
   end
 
 
-  test "can turn a light off" do
+  test "can turn a light off - old" do
     use_cassette "turn_light_off" do
       assert {:ok, _} = TF.bridge
                         |> Light.turn_off(1)

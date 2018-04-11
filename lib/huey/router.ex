@@ -16,6 +16,7 @@ defmodule Huey.Router do
     {:ok, _} = Plug.Adapters.Cowboy.http(__MODULE__, [])
   end
 
+
   get "/activatescene/blue_jays" do
     response = Huey.SceneServer.activate("blue_jays")
     send_resp(conn, 200, "lights updated")
