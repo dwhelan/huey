@@ -19,38 +19,16 @@ defmodule Huey.Light do
     |> handle_response(light)
   end
 
-  defp handle_response(%{status: :error} = response, _light) do
-    {:error, response.error["description"]}
+  def set_color(light, {hue, sat, bri}) do
+    light.bridge
+    |> Huex.set_color(light.number, {hue_to_int(hue), sat, bri})
+    |> handle_response(light)
   end
 
-  defp handle_response(response, light) do
-    {:ok, light}
-  end
-
-  # These should be deleted once all functions use a Light
-
-  def turn_on(bridge, light_number) do
-    bridge
-    |> Huex.turn_on(light_number)
-    |> handle_response
-  end
-
-  def turn_off(bridge, light_number) do
-    bridge
-    |> Huex.turn_off(light_number)
-    |> handle_response
-  end
-
-  def set_color(bridge, light_number, {hue, sat, bri} = hsb_color) do
-    bridge
-    |> Huex.set_color(light_number, {hue_to_int(hue), sat, bri})
-    |> handle_response
-  end
-
-  def set_brightness(bridge, light_number, brightness) do
-    bridge
-    |> Huex.set_brightness(light_number, brightness)
-    |> handle_response
+  def set_brightness(light, brightness) do
+    light.bridge
+    |> Huex.set_brightness(light.number, brightness)
+    |> handle_response(light)
   end
 
   def hue_to_int(hue) when hue < 0 do
@@ -61,11 +39,12 @@ defmodule Huey.Light do
     Kernel.trunc(Kernel.rem(hue, 360) * @one_degree)
   end
 
-  defp handle_response(%{status: :error} = response) do
+  defp handle_response(%{status: :error} = response, _light) do
     {:error, response.error["description"]}
   end
 
-  defp handle_response(response) do
-    {:ok, response}
+  defp handle_response(_response, light) do
+    {:ok, light}
   end
+
 end

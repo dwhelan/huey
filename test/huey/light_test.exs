@@ -12,59 +12,37 @@ defmodule Huey.LightTest do
 
   test "can turn a light on" do
     use_cassette "turn_light_on" do
-      light = Light.create(TF.bridge(), 1)
-      assert {:ok, %Light{}} = Light.turn_on(light)
-    end
-  end
-
-  test "can turn a light off" do
-    use_cassette "turn_light_off" do
-      light = Light.create(TF.bridge(), 1)
-      assert {:ok, %Light{}} = Light.turn_off(light)
-    end
-  end
-
-  # Replace tests below with updated ones to use Light struct
-
-  test "can turn a light on - old" do
-    use_cassette "turn_light_on" do
-      assert {:ok, _} = Light.turn_on(TF.bridge, 1)
+      assert {:ok, %Light{}} = Light.turn_on(test_light())
     end
   end
 
   test "cannot turn on light that doesn't exist" do
     use_cassette "turn_bad_light_on" do
-      assert {:error, _} = TF.bridge
-                           |> Light.turn_on(42)
+      assert {:error, _} = Light.turn_on(test_light(42))
     end
   end
 
-
-  test "can turn a light off - old" do
+  test "can turn a light off" do
     use_cassette "turn_light_off" do
-      assert {:ok, _} = TF.bridge
-                        |> Light.turn_off(1)
+      assert {:ok, %Light{}} = Light.turn_off(test_light())
     end
   end
 
   test "cannot turn off light that doesn't exist" do
     use_cassette "turn_bad_light_off" do
-      assert {:error, "resource, /lights/42/state, not available"} = TF.bridge
-                                                                     |> Light.turn_off(42)
+      assert {:error, "resource, /lights/42/state, not available"} = Light.turn_off(test_light(42))
     end
   end
 
   test "can change the color of a light" do
     use_cassette "change_color" do
-      assert {:ok, _} = TF.bridge
-                        |> Light.set_color(1, {15, 254, 254})
+      assert {:ok, %Light{}} = Light.set_color(test_light(), {15, 254, 254})
     end
   end
 
   test "can set brightness of a light" do
     use_cassette "change_brightness" do
-      assert {:ok, _} = TF.bridge
-                        |> Light.set_brightness(1, 0.99)
+      assert {:ok, %Light{}} = Light.set_brightness(test_light(), 0.99)
     end
   end
 
@@ -75,4 +53,9 @@ defmodule Huey.LightTest do
     assert Light.hue_to_int(-15) == Light.hue_to_int(345)
     assert Light.hue_to_int(-375) == Light.hue_to_int(345)
   end
+
+  defp test_light(number \\ 1) do
+    Light.create(TF.bridge(), number)
+  end
+
 end

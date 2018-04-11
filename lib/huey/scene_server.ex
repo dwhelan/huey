@@ -38,6 +38,7 @@ defmodule Huey.SceneServer do
   end
 
   defp update_light(light_state) do
-    Light.set_color(bridge(), light_state.number, light_state.color)
+    Light.create(bridge(), light_state.number)
+    |> Light.set_color(light_state.color)
   end
 end
