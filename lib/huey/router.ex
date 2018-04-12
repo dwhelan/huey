@@ -17,14 +17,14 @@ defmodule Huey.Router do
   end
 
   get "/activatescene/:scene" do
-    response = Huey.SceneServer.activate(String.to_atom(scene))
+    Huey.SceneServer.activate(String.to_atom(scene))
     send_resp(conn, 200, "lights updated")
   end
 
   post "/createscene" do
     {:ok, json_string} = Poison.encode(conn.body_params)
     {:ok, scene} = Poison.decode(json_string, keys: :atoms)
-    response = Huey.SceneServer.create(scene)
+    Huey.SceneServer.create(scene)
     send_resp(conn, 201, "thanks eh?")
   end
 end
