@@ -6,6 +6,8 @@ defmodule Huey.SceneServer do
 
   alias Huey.{Bridge, Light, LightState}
 
+  # Client API
+  
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], name: @name)
   end
@@ -18,8 +20,8 @@ defmodule Huey.SceneServer do
     GenServer.call(@name, {:create, scene})
   end
 
-
   # Callbacks
+
   def init(_state) do
     light_states = [
       %LightState{number: 1, color: %{h: 240, s: 254, b: 254}},
@@ -42,13 +44,13 @@ defmodule Huey.SceneServer do
     {:reply, :ok, new_state}
   end
 
-  defp bridge do
-    {:ok, bridge} = Bridge.connect("192.168.0.111", "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512")
-    bridge
+  defp update_light(light_state) do
+    Light.create(connection(), light_state.number)
+    |> Light.set_color(light_state.color)
   end
 
-  defp update_light(light_state) do
-    Light.create(bridge(), light_state.number)
-    |> Light.set_color(light_state.color)
+  defp connection do
+    {:ok, bridge} = Bridge.connect("192.168.0.111", "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512")
+    %Huey.Connection{bridge: bridge}
   end
 end

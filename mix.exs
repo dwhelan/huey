@@ -24,7 +24,8 @@ defmodule Huey.MixProject do
     [
       {:mix_test_watch, "~> 0.5", only: :dev},
       {:exvcr, "~> 0.8", only: :test},
-      {:huex, "~> 0.7"},
+      {:huex, path: "../huex"},
+#      {:huex, "~> 0.7"},
       {:cowboy, "~> 1.0.3"},
       {:plug, "~> 1.0"},
       {:poison, "~> 3.0"},
