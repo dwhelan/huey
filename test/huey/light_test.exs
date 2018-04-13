@@ -5,6 +5,27 @@ defmodule Huey.LightTest do
 
   defmodule Expectation do
     defstruct [expect: nil, response: nil]
+
+    def expect(method, args) do
+      %Expectation{
+        expect: {method, args},
+        response: %{
+          status: :ok
+        }
+      }
+    end
+
+    def expect(method, args, error_message) do
+      %Expectation{
+        expect: {method, args},
+        response: %{
+          status: :error,
+          error: %{
+            "description" => error_message
+          }
+        }
+      }
+    end
   end
 
   defmodule HuexDouble do
@@ -41,25 +62,12 @@ defmodule Huey.LightTest do
     assert {:error, "error message"} == Light.turn_off(light)
   end
 
-  defp expect(method, error_message) do
-    expect(
-      method,
-      [%Expectation{}, @light_number],
-      %{
-        status: :error,
-        error: %{
-          "description" => error_message
-        }
-      }
-    )
-  end
-
   defp expect(method) do
-    expect(method, [%Expectation{}, @light_number], %{status: :ok})
+    Expectation.expect(method, [%Expectation{}, @light_number])
   end
 
-  defp expect(method, args, response) do
-    %Expectation{expect: {method, args}, response: response}
+  defp expect(method, error_message) do
+    Expectation.expect(method, [%Expectation{}, @light_number], error_message)
   end
 
   defp light_double(%Expectation{} = expectation) do
