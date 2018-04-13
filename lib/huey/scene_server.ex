@@ -7,7 +7,7 @@ defmodule Huey.SceneServer do
   alias Huey.{Bridge, Light, LightState}
 
   # Client API
-  
+
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], name: @name)
   end

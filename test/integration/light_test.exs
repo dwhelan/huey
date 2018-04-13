@@ -2,7 +2,7 @@ defmodule Huey.Integration.LightTest do
   use ExUnit.Case, asnyc: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney, clear_mock: true
 
-  alias Huey.{Connection, Light}
+  alias Huey.Light
   alias TestFixture, as: TF
 
   setup_all do
@@ -48,13 +48,5 @@ defmodule Huey.Integration.LightTest do
     use_cassette "change_brightness" do
       assert {:ok, %Light{}} = Light.set_brightness(test_light(), 0.99)
     end
-  end
-
-  test "converts angle to Hue integer" do
-    assert Light.hue_to_int(0) == 0
-    assert Light.hue_to_int(1) == 182
-    assert Light.hue_to_int(360) == 0
-    assert Light.hue_to_int(-15) == Light.hue_to_int(345)
-    assert Light.hue_to_int(-375) == Light.hue_to_int(345)
   end
 end

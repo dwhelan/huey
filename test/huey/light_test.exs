@@ -2,75 +2,100 @@ defmodule Huey.LightTest do
   use ExUnit.Case, asnyc: true
 
   alias Huey.{Connection, Light}
-  alias TestFixture, as: TF
 
-  defmodule BridgeDouble do
+  defmodule Expectation do
     defstruct [expect: nil, response: nil]
   end
 
   defmodule HuexDouble do
-    def turn_on(bridge, light_number) do
-      assert {:turn_on, [%BridgeDouble{}, ^light_number]} = bridge.expect
-      bridge.response
+    def turn_on(%Expectation{} = expectation, light_number) do
+      assert {:turn_on, [_, ^light_number]} = expectation.expect
+      expectation.response
+    end
+
+    def turn_off(%Expectation{} = expectation, light_number) do
+      assert {:turn_off, [_, ^light_number]} = expectation.expect
+      expectation.response
     end
   end
 
-  test "turn light on" do
-    bridge_double = %BridgeDouble{expect: {:turn_on, [%BridgeDouble{}, 1]}, response: {:ok, %BridgeDouble{}}}
-    test_light = light_double(bridge_double)
-    assert {:ok, %Light{}} = Light.turn_on(test_light)
+  @light_number 42
+
+  test "turn on" do
+    light = light_double(:turn_on)
+    assert {:ok, %Light{}} = Light.turn_on(light)
   end
 
-#  test "turn light off" do
-#    bridge_double = %BridgeDouble{expect: {:turn_off, [%BridgeDouble{}, 1]}, response: {:ok, %BridgeDouble{}}}
-#    test_light = light_double(bridge_double)
-#    assert {:ok, %Light{}} = Light.turn_on(test_light)
-#  end
-
-  defp light_double(bridge_double, number \\ 1) do
-    connection = %Connection{bridge: bridge_double, huex: HuexDouble}
-    Light.create(connection, number)
+  test "turn on with error" do
+    light = light_double(:turn_on, "error message")
+    assert {:error, "error message"} == Light.turn_on(light)
   end
 
-  defp test_light(number \\ 1) do
-    Light.create(TF.bridge(), number)
+  test "turn off" do
+    light = light_double(:turn_off)
+    assert {:ok, %Light{}} = Light.turn_off(light)
   end
 
-#  test "cannot turn on light that doesn't exist" do
-#    use_cassette "turn_bad_light_on" do
-#      assert {:error, _} = Light.turn_on(test_light(42))
-#    end
-#  end
-#
-#  test "can turn a light off" do
-#    use_cassette "turn_light_off" do
-#      assert {:ok, %Light{}} = Light.turn_off(test_light())
-#    end
-#  end
-#
-#  test "cannot turn off light that doesn't exist" do
-#    use_cassette "turn_bad_light_off" do
-#      assert {:error, "resource, /lights/42/state, not available"} = Light.turn_off(test_light(42))
-#    end
-#  end
-#
-#  test "can change the color of a light" do
-#    use_cassette "change_color" do
-#      assert {:ok, %Light{}} = Light.set_color(test_light(), %{h: 15, s: 254, b: 254})
-#    end
-#  end
-#
-#  test "can set brightness of a light" do
-#    use_cassette "change_brightness" do
-#      assert {:ok, %Light{}} = Light.set_brightness(test_light(), 0.99)
-#    end
-#  end
-#
-#  test "converts angle to Hue integer" do
-#    assert Light.hue_to_int(0) == 0
-#    assert Light.hue_to_int(1) == 182
-#    assert Light.hue_to_int(360) == 0
-#    assert Light.hue_to_int(-15) == Light.hue_to_int(345)
-#    assert Light.hue_to_int(-375) == Light.hue_to_int(345)
-#  end
+  test "turn off with error" do
+    light = light_double(:turn_off, "error message")
+    assert {:error, "error message"} == Light.turn_off(light)
+  end
+
+  defp expect(method, error_message) do
+    %Expectation{
+      expect: {method, [%Expectation{}, @light_number]},
+      response: %{
+        status: :error,
+        error: %{
+          "description" => error_message
+        }
+      }
+    }
+  end
+
+  defp expect(method) do
+    %Expectation{
+      expect: {method, [%Expectation{}, @light_number]},
+      response: %{
+        status: :ok
+      }
+    }
+  end
+
+  defp light_double(%Expectation{} = expectation) do
+    connection = %Connection{bridge: expectation, huex: HuexDouble}
+    Light.create(connection, @light_number)
+  end
+
+  defp light_double(method) do
+    method
+    |> expect()
+    |> light_double()
+  end
+
+  defp light_double(method, error_message) do
+    method
+    |> expect(error_message)
+    |> light_double()
+  end
+
+  #  test "can change the color of a light" do
+  #    use_cassette "change_color" do
+  #      assert {:ok, %Light{}} = Light.set_color(test_light(), %{h: 15, s: 254, b: 254})
+  #    end
+  #  end
+  #
+  #  test "can set brightness of a light" do
+  #    use_cassette "change_brightness" do
+  #      assert {:ok, %Light{}} = Light.set_brightness(test_light(), 0.99)
+  #    end
+  #  end
+  #
+  test "converts angle to Hue integer" do
+    assert Light.hue_to_int(0) == 0
+    assert Light.hue_to_int(1) == 182
+    assert Light.hue_to_int(360) == 0
+    assert Light.hue_to_int(-15) == Light.hue_to_int(345)
+    assert Light.hue_to_int(-375) == Light.hue_to_int(345)
+  end
 end
