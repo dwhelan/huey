@@ -42,24 +42,24 @@ defmodule Huey.LightTest do
   end
 
   defp expect(method, error_message) do
-    %Expectation{
-      expect: {method, [%Expectation{}, @light_number]},
-      response: %{
+    expect(
+      method,
+      [%Expectation{}, @light_number],
+      %{
         status: :error,
         error: %{
           "description" => error_message
         }
       }
-    }
+    )
   end
 
   defp expect(method) do
-    %Expectation{
-      expect: {method, [%Expectation{}, @light_number]},
-      response: %{
-        status: :ok
-      }
-    }
+    expect(method, [%Expectation{}, @light_number], %{status: :ok})
+  end
+
+  defp expect(method, args, response) do
+    %Expectation{expect: {method, args}, response: response}
   end
 
   defp light_double(%Expectation{} = expectation) do
