@@ -4,7 +4,7 @@ defmodule Huey.SceneServer do
 
   use GenServer
 
-  alias Huey.{Bridge, Light, LightState, LightUpdater}
+  alias Huey.{Bridge, Light, LightUpdater}
 
   # Client API
 
@@ -23,19 +23,18 @@ defmodule Huey.SceneServer do
   # Callbacks
 
   def init(_state) do
-    light_states = [
-      %LightState{number: 1, color: %{h: 240, s: 254, b: 254}},
-      %LightState{number: 3, color: %{h:   0, s: 254, b: 150}},
-      %LightState{number: 4, color: %{h: 260, s: 254, b: 150}},
-      %LightState{number: 5, color: %{h: 240, s: 254, b: 254}}
-    ]
-    state = %{blue_jays: light_states}
+    state = %{blue_jays: [
+      %Light{number: 1, color: %{h: 240, s: 254, b: 254}},
+      %Light{number: 3, color: %{h:   0, s: 254, b: 150}},
+      %Light{number: 4, color: %{h: 260, s: 254, b: 150}},
+      %Light{number: 5, color: %{h: 240, s: 254, b: 254}}
+    ]}
     {:ok, state}
   end
 
   def handle_call({:activate, scene_name}, _from, state) do
-    light_states = state[scene_name]
-    Enum.each(light_states, fn(light_state) -> update_light(light_state) end)
+    lights = state[scene_name]
+    Enum.each(lights, fn(light) -> update_light(light) end)
     {:reply, :ok, state}
   end
 
@@ -44,9 +43,9 @@ defmodule Huey.SceneServer do
     {:reply, :ok, new_state}
   end
 
-  defp update_light(light_state) do
-    LightUpdater.create(connection(), light_state.number)
-    |> LightUpdater.set_color(light_state.color)
+  defp update_light(light) do
+    %Light{light | connection: connection()}
+    |> LightUpdater.set_color(light.color)
   end
 
   defp connection do

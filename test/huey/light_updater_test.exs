@@ -89,6 +89,6 @@ defmodule Huey.LightUpdaterTest do
 
   defp light_double(%Expectation{} = expectation) do
     connection = %Connection{bridge: expectation, huex: HuexDouble}
-    LightUpdater.create(connection, @light_number)
+    %Light{connection: connection, number: @light_number}
   end
 end

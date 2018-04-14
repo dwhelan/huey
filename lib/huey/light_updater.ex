@@ -1,10 +1,6 @@
 defmodule Huey.LightUpdater do
   alias Huey.{Light, Color}
 
-  def create(connection, number) do
-    %Huey.Light{connection: connection, number: number}
-  end
-
   def turn_on(light) do
     update(light, :turn_on)
   end

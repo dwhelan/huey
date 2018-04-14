@@ -11,7 +11,7 @@ defmodule Huey.Integration.LightTest do
   end
 
   defp test_light(number \\ 1) do
-    LightUpdater.create(TF.connection(), number)
+    %Light{connection: TF.connection(), number: number}
   end
 
   test "can turn a light on" do
