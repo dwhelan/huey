@@ -4,7 +4,7 @@ defmodule Huey.Router do
 
   plug Plug.Logger
 
-  plug Plug.Parsers, parsers: [:json], json_decoder: Poison
+#  plug Plug.Parsers, parsers: [:json], json_decoder: Poison
   plug :match
   plug :dispatch
 
@@ -22,8 +22,8 @@ defmodule Huey.Router do
   end
 
   post "/createscene" do
-    {:ok, json_string} = Poison.encode(conn.body_params)
-    {:ok, scene} = Poison.decode(json_string, keys: :atoms)
+    {:ok, body, conn} = Plug.Conn.read_body(conn)
+    {:ok, scene} = Poison.decode(body, keys: :atoms)
     Huey.SceneServer.create(scene)
     send_resp(conn, 201, "thanks eh?")
   end
