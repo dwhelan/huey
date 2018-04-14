@@ -23,3 +23,28 @@ defmodule TestFixture do
     bridge
   end
 end
+
+defmodule Expectation do
+  defstruct [:expect, :response]
+
+  def expect(method, args) do
+    %Expectation{
+      expect: {method, args},
+      response: %{
+        status: :ok
+      }
+    }
+  end
+
+  def expect(method, args, error_message) do
+    %Expectation{
+      expect: {method, args},
+      response: %{
+        status: :error,
+        error: %{
+          "description" => error_message
+        }
+      }
+    }
+  end
+end

@@ -3,31 +3,6 @@ defmodule Huey.LightTest do
 
   alias Huey.{Connection, Light}
 
-  defmodule Expectation do
-    defstruct [expect: nil, response: nil]
-
-    def expect(method, args) do
-      %Expectation{
-        expect: {method, args},
-        response: %{
-          status: :ok
-        }
-      }
-    end
-
-    def expect(method, args, error_message) do
-      %Expectation{
-        expect: {method, args},
-        response: %{
-          status: :error,
-          error: %{
-            "description" => error_message
-          }
-        }
-      }
-    end
-  end
-
   defmodule HuexDouble do
     def turn_on(%Expectation{} = expectation, light_number) do
       assert {:turn_on, [_, ^light_number]} = expectation.expect
@@ -75,13 +50,13 @@ defmodule Huey.LightTest do
     Light.create(connection, @light_number)
   end
 
-  defp light_double(method) do
+  defp light_double(method) when is_atom(method) do
     method
     |> expect()
     |> light_double()
   end
 
-  defp light_double(method, error_message) do
+  defp light_double(method, error_message)  when is_atom(method) do
     method
     |> expect(error_message)
     |> light_double()
