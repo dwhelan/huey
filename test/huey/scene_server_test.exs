@@ -2,7 +2,7 @@ defmodule Huey.SceneServerTest do
   use ExUnit.Case, asnyc: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney, clear_mock: true
 
-  alias Huey.{SceneServer, LightState}
+  alias Huey.{SceneServer, Light}
 
   setup_all do
     ExVCR.Config.cassette_library_dir("test/fixtures")
@@ -11,10 +11,10 @@ defmodule Huey.SceneServerTest do
 
   setup do
     light_states = [
-      %LightState{number: 1, color: %{h: 240, s: 254, b: 254}},
-      %LightState{number: 3, color: %{h: 0, s: 254, b: 150}},
-      %LightState{number: 4, color: %{h: 260, s: 254, b: 150}},
-      %LightState{number: 5, color: %{h: 240, s: 254, b: 254}}
+      %Light{number: 1, color: %{h: 240, s: 254, b: 254}},
+      %Light{number: 3, color: %{h: 0, s: 254, b: 150}},
+      %Light{number: 4, color: %{h: 260, s: 254, b: 150}},
+      %Light{number: 5, color: %{h: 240, s: 254, b: 254}}
     ]
     state = %{blue_jays: light_states}
 
@@ -30,10 +30,10 @@ defmodule Huey.SceneServerTest do
 
   test "can create a new scene", context do
     light_states = [
-      %LightState{number: 1, color: %{h: 0, s: 254, b: 150}},
-      %LightState{number: 3, color: %{h: 0, s: 0,   b: 254}},
-      %LightState{number: 4, color: %{h: 0, s: 0,   b: 254}},
-      %LightState{number: 5, color: %{h: 0, s: 254, b: 150}}
+      %Light{number: 1, color: %{h: 0, s: 254, b: 150}},
+      %Light{number: 3, color: %{h: 0, s: 0,   b: 254}},
+      %Light{number: 4, color: %{h: 0, s: 0,   b: 254}},
+      %Light{number: 5, color: %{h: 0, s: 254, b: 150}}
     ]
     new_scene = %{oh_canada: light_states}
     {_, _, updated_state} = SceneServer.handle_call({:create, new_scene}, [], context[:state])
