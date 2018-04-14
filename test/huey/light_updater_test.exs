@@ -1,7 +1,7 @@
 defmodule Huey.LightUpdaterTest do
   use ExUnit.Case, asnyc: true
 
-  alias Huey.{Connection, Light, LightUpdater}
+  alias Huey.{Connection, Light, LightUpdater, Color}
 
   defmodule HuexDouble do
     def turn_on(%Expectation{} = expectation, light_number) do
@@ -53,7 +53,7 @@ defmodule Huey.LightUpdaterTest do
 
   describe "set color" do
     test "successfully" do
-      light = light_expect(:set_color, [{LightUpdater.hue_to_int(15), 254, 254}])
+      light = light_expect(:set_color, [{Color.hue_to_int(15), 254, 254}])
       assert {:ok, %Light{}} = LightUpdater.set_color(light, %{h: 15, s: 254, b: 254})
     end
 
@@ -73,14 +73,6 @@ defmodule Huey.LightUpdaterTest do
       light = light_expect_error(:set_brightness, [0.5])
       assert {:error, "error message"} == LightUpdater.set_brightness(light, 0.5)
     end
-  end
-
-  test "converts angle to Hue integer" do
-    assert LightUpdater.hue_to_int(0) == 0
-    assert LightUpdater.hue_to_int(1) == 182
-    assert LightUpdater.hue_to_int(360) == 0
-    assert LightUpdater.hue_to_int(-15) == LightUpdater.hue_to_int(345)
-    assert LightUpdater.hue_to_int(-375) == LightUpdater.hue_to_int(345)
   end
 
   defp light_expect(method, args \\ []) do

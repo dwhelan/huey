@@ -1,7 +1,5 @@
 defmodule Huey.LightUpdater do
-  alias Huey.Light
-
-  @one_degree 65536 / 360
+  alias Huey.{Light, Color}
 
   def create(connection, number) do
     %Huey.Light{connection: connection, number: number}
@@ -16,19 +14,11 @@ defmodule Huey.LightUpdater do
   end
 
   def set_color(light, %{h: h, s: s, b: b}) do
-    update(light, :set_color, [{hue_to_int(h), s, b}])
+    update(light, :set_color, [{Color.hue_to_int(h), s, b}])
   end
 
   def set_brightness(light, brightness) do
     update(light, :set_brightness, [brightness])
-  end
-
-  def hue_to_int(hue) when hue < 0 do
-    hue_to_int(360 + hue)
-  end
-
-  def hue_to_int(hue) do
-    trunc(rem(hue, 360) * @one_degree)
   end
 
   defp update(light, method, args \\ []) do
