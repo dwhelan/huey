@@ -36,7 +36,7 @@ defmodule Expectation do
     }
   end
 
-  def expect(method, args, error_message) do
+  def expect_error(method, args, error_message) do
     %Expectation{
       expect: {method, args},
       response: %{

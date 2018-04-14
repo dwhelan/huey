@@ -23,18 +23,18 @@ defmodule Huey.Light do
     update(light, :set_brightness, [brightness])
   end
 
-  defp update(light, method, args \\ []) do
-    connection = light.connection
-    apply(connection.huex, method, [connection.bridge, light.number] ++ args)
-    |> handle_response(light)
-  end
-
   def hue_to_int(hue) when hue < 0 do
     hue_to_int(360 + hue)
   end
 
   def hue_to_int(hue) do
     trunc(rem(hue, 360) * @one_degree)
+  end
+
+  defp update(light, method, args \\ []) do
+    connection = light.connection
+    apply(connection.huex, method, [connection.bridge, light.number] ++ args)
+    |> handle_response(light)
   end
 
   defp handle_response(%{status: :error} = response, _light) do
@@ -44,5 +44,4 @@ defmodule Huey.Light do
   defp handle_response(_response, light) do
     {:ok, light}
   end
-
 end

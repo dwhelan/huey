@@ -13,72 +13,90 @@ defmodule Huey.LightTest do
       assert {:turn_off, [_, ^light_number]} = expectation.expect
       expectation.response
     end
+
+    def set_color(%Expectation{} = expectation, light_number, color) do
+      assert {:set_color, [_, ^light_number, ^color]} = expectation.expect
+      expectation.response
+    end
+
+    def set_brightness(%Expectation{} = expectation, light_number, brightness) do
+      assert {:set_brightness, [_, ^light_number, ^brightness]} = expectation.expect
+      expectation.response
+    end
   end
 
   @light_number 42
 
-  test "turn on" do
-    light = light_double(:turn_on)
-    assert {:ok, %Light{}} = Light.turn_on(light)
+  describe "turn on" do
+    test "successfully" do
+      light = light_expect(:turn_on)
+      assert {:ok, %Light{}} = Light.turn_on(light)
+    end
+
+    test "with error" do
+      light = light_expect_error(:turn_on)
+      assert {:error, "error message"} == Light.turn_on(light)
+    end
   end
 
-  test "turn on with error" do
-    light = light_double(:turn_on, "error message")
-    assert {:error, "error message"} == Light.turn_on(light)
+  describe "turn off" do
+    test "successfully" do
+      light = light_expect(:turn_off)
+      assert {:ok, %Light{}} = Light.turn_off(light)
+    end
+
+    test "with error" do
+      light = light_expect_error(:turn_off)
+      assert {:error, "error message"} == Light.turn_off(light)
+    end
   end
 
-  test "turn off" do
-    light = light_double(:turn_off)
-    assert {:ok, %Light{}} = Light.turn_off(light)
+  describe "set color" do
+    test "successfully" do
+      light = light_expect(:set_color, [{Light.hue_to_int(15), 254, 254}])
+      assert {:ok, %Light{}} = Light.set_color(light, %{h: 15, s: 254, b: 254})
+    end
+
+    test "with error" do
+      light = light_expect_error(:set_color, [{2730, 254, 254}])
+      assert {:error, "error message"} == Light.set_color(light, %{h: 15, s: 254, b: 254})
+    end
   end
 
-  test "turn off with error" do
-    light = light_double(:turn_off, "error message")
-    assert {:error, "error message"} == Light.turn_off(light)
+  describe "set brightness" do
+    test "successfully" do
+      light = light_expect(:set_brightness, [0.5])
+      assert {:ok, %Light{}} = Light.set_brightness(light, 0.5)
+    end
+
+    test "with error" do
+      light = light_expect_error(:set_brightness, [0.5])
+      assert {:error, "error message"} == Light.set_brightness(light, 0.5)
+    end
   end
 
-  defp expect(method) do
-    Expectation.expect(method, [%Expectation{}, @light_number])
-  end
-
-  defp expect(method, error_message) do
-    Expectation.expect(method, [%Expectation{}, @light_number], error_message)
-  end
-
-  defp light_double(%Expectation{} = expectation) do
-    connection = %Connection{bridge: expectation, huex: HuexDouble}
-    Light.create(connection, @light_number)
-  end
-
-  defp light_double(method) when is_atom(method) do
-    method
-    |> expect()
-    |> light_double()
-  end
-
-  defp light_double(method, error_message)  when is_atom(method) do
-    method
-    |> expect(error_message)
-    |> light_double()
-  end
-
-  #  test "can change the color of a light" do
-  #    use_cassette "change_color" do
-  #      assert {:ok, %Light{}} = Light.set_color(test_light(), %{h: 15, s: 254, b: 254})
-  #    end
-  #  end
-  #
-  #  test "can set brightness of a light" do
-  #    use_cassette "change_brightness" do
-  #      assert {:ok, %Light{}} = Light.set_brightness(test_light(), 0.99)
-  #    end
-  #  end
-  #
   test "converts angle to Hue integer" do
     assert Light.hue_to_int(0) == 0
     assert Light.hue_to_int(1) == 182
     assert Light.hue_to_int(360) == 0
     assert Light.hue_to_int(-15) == Light.hue_to_int(345)
     assert Light.hue_to_int(-375) == Light.hue_to_int(345)
+  end
+
+  defp light_expect(method, args \\ []) do
+    method
+    |> Expectation.expect([%Expectation{}, @light_number] ++ args)
+    |> light_double()
+  end
+
+  defp light_expect_error(method, args \\ [], error_message \\ "error message") do
+    method
+    |> Expectation.expect_error([%Expectation{}, @light_number] ++ args, error_message)
+    |> light_double()
+  end
+
+  defp light_double(%Expectation{} = expectation) do
+    connection = %Connection{bridge: expectation, huex: HuexDouble}
+    Light.create(connection, @light_number)
   end
 end
