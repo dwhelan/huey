@@ -3,7 +3,7 @@ defmodule Huey.Integration.LightTest do
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney, clear_mock: true
 
   alias Huey.{Light, LightUpdater}
-  alias TestFixture, as: TF
+  alias Huey.TestFixture, as: TF
 
   setup_all do
     ExVCR.Config.cassette_library_dir("test/fixtures")

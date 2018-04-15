@@ -2,7 +2,7 @@ defmodule Huey.LightUpdaterTest do
   use ExUnit.Case, asnyc: true
 
   alias Huey.{Light, LightUpdater}
-  alias TestFixture, as: TF
+  alias Huey.TestFixture, as: TF
 
   describe "turn on" do
     test "successfully" do

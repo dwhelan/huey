@@ -5,7 +5,7 @@ excludes = [:skip]
 
 ExUnit.start(include: :focus, exclude: excludes, capture_log: true)
 
-defmodule TestFixture do
+defmodule Huey.TestFixture do
   def host do
     "192.168.0.111"
   end
@@ -19,7 +19,7 @@ defmodule TestFixture do
   end
 
   def bridge do
-    {:ok, bridge} = Huey.Bridge.connect(TestFixture.host(), TestFixture.username())
+    {:ok, bridge} = Huey.Bridge.connect(Huey.TestFixture.host(), Huey.TestFixture.username())
     bridge
   end
 
