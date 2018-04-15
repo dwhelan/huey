@@ -1,7 +1,8 @@
 defmodule Huey.LightUpdaterTest do
   use ExUnit.Case, asnyc: true
 
-  alias Huey.{Connection, Light, LightUpdater, Color}
+  alias Huey.{Connection, Light, LightUpdater, Color, LightUpdaterTest}
+  alias TestFixture, as: TF
 
   defmodule HuexDouble do
     def turn_on(%Expectation{} = expectation, light_number) do
@@ -26,15 +27,36 @@ defmodule Huey.LightUpdaterTest do
   end
 
   @light_number 42
+  def light_number, do: 42
+  def bridge, do: TF.bridge
 
   describe "turn on" do
     test "successfully" do
-      light = light_expect(:turn_on)
-      assert {:ok, %Light{}} = LightUpdater.turn_on(light)
+      defmodule TurnOnSuccess do
+        def turn_on(bridge, light_number) do
+          assert bridge == LightUpdaterTest.bridge()
+          assert light_number == LightUpdaterTest.light_number()
+          {:ok, bridge}
+        end
+      end
+
+      light = create_light(TurnOnSuccess)
+      assert {:ok, light} == LightUpdater.turn_on(light)
     end
 
     test "with error" do
-      light = light_expect_error(:turn_on)
+      defmodule TurnOnError do
+        def turn_on(_, _) do
+          %{
+            status: :error,
+            error: %{
+              "description" => "error message"
+            }
+          }
+        end
+      end
+
+      light = create_light(TurnOnError)
       assert {:error, "error message"} == LightUpdater.turn_on(light)
     end
   end
@@ -73,6 +95,11 @@ defmodule Huey.LightUpdaterTest do
       light = light_expect_error(:set_brightness, [0.5])
       assert {:error, "error message"} == LightUpdater.set_brightness(light, 0.5)
     end
+  end
+
+
+  defp create_light(huex_double) do
+    %Light{connection: %Connection{bridge: TF.bridge, huex: huex_double}, number: @light_number}
   end
 
   defp light_expect(method, args \\ []) do
