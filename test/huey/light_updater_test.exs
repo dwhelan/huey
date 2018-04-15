@@ -30,12 +30,29 @@ defmodule Huey.LightUpdaterTest do
   def light_number, do: 42
   def bridge, do: TF.bridge
 
+  defmodule HuexDouble2 do
+    def assert_args(bridge, light_number) do
+      assert bridge == LightUpdaterTest.bridge()
+      assert light_number == LightUpdaterTest.light_number()
+    end
+
+    def error(message) do
+      %{
+        status: :error,
+        error: %{
+          "description" => message
+        }
+      }
+    end
+  end
+
   describe "turn on" do
     test "successfully" do
       defmodule TurnOnSuccess do
+        import HuexDouble2
+
         def turn_on(bridge, light_number) do
-          assert bridge == LightUpdaterTest.bridge()
-          assert light_number == LightUpdaterTest.light_number()
+          assert_args(bridge, light_number)
           {:ok, bridge}
         end
       end
@@ -46,13 +63,10 @@ defmodule Huey.LightUpdaterTest do
 
     test "with error" do
       defmodule TurnOnError do
+        import HuexDouble2
+
         def turn_on(_, _) do
-          %{
-            status: :error,
-            error: %{
-              "description" => "error message"
-            }
-          }
+          error("error message")
         end
       end
 
@@ -63,12 +77,29 @@ defmodule Huey.LightUpdaterTest do
 
   describe "turn off" do
     test "successfully" do
-      light = light_expect(:turn_off)
-      assert {:ok, %Light{}} = LightUpdater.turn_off(light)
+      defmodule TurnOffSuccess do
+        import HuexDouble2
+
+        def turn_off(bridge, light_number) do
+          assert_args(bridge, light_number)
+          {:ok, bridge}
+        end
+      end
+
+      light = create_light(TurnOffSuccess)
+      assert {:ok, light} == LightUpdater.turn_off(light)
     end
 
     test "with error" do
-      light = light_expect_error(:turn_off)
+      defmodule TurnOffError do
+        import HuexDouble2
+
+        def turn_off(_, _) do
+          error("error message")
+        end
+      end
+
+      light = create_light(TurnOffError)
       assert {:error, "error message"} == LightUpdater.turn_off(light)
     end
   end
@@ -102,13 +133,13 @@ defmodule Huey.LightUpdaterTest do
     %Light{connection: %Connection{bridge: TF.bridge, huex: huex_double}, number: @light_number}
   end
 
-  defp light_expect(method, args \\ []) do
+  defp light_expect(method, args) do
     method
     |> Expectation.expect([%Expectation{}, @light_number] ++ args)
     |> light_double()
   end
 
-  defp light_expect_error(method, args \\ [], error_message \\ "error message") do
+  defp light_expect_error(method, args, error_message \\ "error message") do
     method
     |> Expectation.expect_error([%Expectation{}, @light_number] ++ args, error_message)
     |> light_double()
