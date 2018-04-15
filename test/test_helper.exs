@@ -22,6 +22,15 @@ defmodule TestFixture do
     {:ok, bridge} = Huey.Bridge.connect(TestFixture.host(), TestFixture.username())
     bridge
   end
+
+  def bridge_error(message) do
+    %{
+      status: :error,
+      error: %{
+        "description" => message
+      }
+    }
+  end
 end
 
 defmodule Expectation do
