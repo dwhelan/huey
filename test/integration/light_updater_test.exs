@@ -1,4 +1,4 @@
-defmodule Huey.Integration.LightTest do
+defmodule Huey.Integration.LightUpdaterTest do
   use ExUnit.Case, asnyc: true
   use ExVCR.Mock, adapter: ExVCR.Adapter.Hackney, clear_mock: true
 
@@ -6,47 +6,35 @@ defmodule Huey.Integration.LightTest do
   alias Huey.TestFixture, as: TF
 
   setup_all do
-    ExVCR.Config.cassette_library_dir("test/fixtures")
+    ExVCR.Config.cassette_library_dir("test/fixtures/light_updater")
     HTTPoison.start()
   end
 
-  defp test_light(number \\ 1) do
-    %Light{connection: TF.connection(), number: number}
-  end
-
-  test "can turn a light on" do
-    use_cassette "turn_light_on" do
-      assert {:ok, %Light{}} = LightUpdater.turn_on(test_light())
+  test "turn on" do
+    use_cassette "turn_on" do
+      LightUpdater.turn_on(test_light())
     end
   end
 
-  test "cannot turn on light that doesn't exist" do
-    use_cassette "turn_bad_light_on" do
-      assert {:error, _} = LightUpdater.turn_on(test_light(42))
+  test "turn off" do
+    use_cassette "turn_off" do
+      LightUpdater.turn_off(test_light())
     end
   end
 
-  test "can turn a light off" do
-    use_cassette "turn_light_off" do
-      assert {:ok, %Light{}} = LightUpdater.turn_off(test_light())
+  test "set color" do
+    use_cassette "set_color" do
+      LightUpdater.set_color(test_light(), %{h: 15, s: 254, b: 254})
     end
   end
 
-  test "cannot turn off light that doesn't exist" do
-    use_cassette "turn_bad_light_off" do
-      assert {:error, "resource, /lights/42/state, not available"} = LightUpdater.turn_off(test_light(42))
+  test "set brightness" do
+    use_cassette "set_brightness" do
+      LightUpdater.set_brightness(test_light(), 0.99)
     end
   end
 
-  test "can change the color of a light" do
-    use_cassette "change_color" do
-      assert {:ok, %Light{}} = LightUpdater.set_color(test_light(), %{h: 15, s: 254, b: 254})
-    end
-  end
-
-  test "can set brightness of a light" do
-    use_cassette "change_brightness" do
-      assert {:ok, %Light{}} = LightUpdater.set_brightness(test_light(), 0.99)
-    end
+  defp test_light() do
+    %Light{connection: TF.connection(), number: 1}
   end
 end
