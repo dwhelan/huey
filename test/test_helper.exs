@@ -14,8 +14,8 @@ defmodule TestFixture do
     "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512"
   end
 
-  def connection(huex \\ Huex) do
-    %Huey.Connection{bridge: bridge(), huex: huex}
+  def connection(huex \\ Huex, bridge \\ bridge()) do
+    %Huey.Connection{bridge: bridge, huex: huex}
   end
 
   def bridge do
@@ -28,31 +28,6 @@ defmodule TestFixture do
       status: :error,
       error: %{
         "description" => message
-      }
-    }
-  end
-end
-
-defmodule Expectation do
-  defstruct [:expect, :response]
-
-  def expect(method, args) do
-    %Expectation{
-      expect: {method, args},
-      response: %{
-        status: :ok
-      }
-    }
-  end
-
-  def expect_error(method, args, error_message) do
-    %Expectation{
-      expect: {method, args},
-      response: %{
-        status: :error,
-        error: %{
-          "description" => error_message
-        }
       }
     }
   end
