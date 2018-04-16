@@ -4,15 +4,29 @@ defmodule Huey.ConnectionTest do
   alias Huey.Connection
   alias Huex.Bridge
 
-  test "connect" do
-    connection = Connection.create("host", "username")
-    assert connection.bridge.host == "host"
-    assert connection.bridge.username == "username"
-    assert connection.huex == Huex
+  describe "create" do
+    test "should default to use Huex" do
+      connection = Connection.create("host", "username")
+      assert %Bridge{host: "host", username: "username"} = connection.bridge
+      assert connection.huex == Huex
+    end
+
+    test "should support Huex double" do
+      connection = Connection.create("", "", :HuexDouble)
+      assert connection.huex == :HuexDouble
+    end
   end
 
-  test "connect with Huex double" do
-    connection = Connection.create("host", "username", :HuexDouble)
-    assert connection.huex == :HuexDouble
+  describe "authorize"do
+    test "should update bridge with generated user name" do
+      defmodule Authorize do
+        def authorize(bridge, _device_type) do
+          {:ok, %{bridge | username: "username"}}
+        end
+      end
+
+      {:ok, connection} = Connection.authorize("host", "device_type", Authorize)
+      assert %Bridge{host: "host", username: "username"} = connection.bridge
+    end
   end
 end
