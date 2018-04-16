@@ -19,8 +19,7 @@ defmodule Huey.TestFixture do
   end
 
   def bridge do
-    {:ok, bridge} = Huey.Bridge.connect(host(), username())
-    bridge
+    %Huex.Bridge{host: host(), username: username()}
   end
 
   def bridge_error(message) do

@@ -9,8 +9,4 @@ defmodule Huey.Bridge do
       _ -> {:ok, response.username}
     end
   end
-
-  def connect(ip, username) do
-    {:ok, Huex.connect(ip, username)}
-  end
 end

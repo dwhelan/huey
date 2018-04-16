@@ -23,10 +23,4 @@ defmodule Huey.BridgeTest do
       assert message == "link button not pressed"
     end
   end
-
-  test "connect established" do
-    {:ok, bridge} = Bridge.connect(TF.host(), "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512")
-    assert bridge.host == TF.host();
-    assert bridge.username == TF.username()
-  end
 end

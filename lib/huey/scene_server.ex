@@ -4,7 +4,7 @@ defmodule Huey.SceneServer do
 
   use GenServer
 
-  alias Huey.{Connection, Bridge, Light, LightUpdater}
+  alias Huey.{Connection, Light, LightUpdater}
 
   # Client API
 
