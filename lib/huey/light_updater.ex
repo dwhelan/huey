@@ -1,4 +1,6 @@
 defmodule Huey.LightUpdater do
+  import Huey.Huex
+
   alias Huey.{Light, Color}
 
   def turn_on(light) do
@@ -21,13 +23,5 @@ defmodule Huey.LightUpdater do
     connection = light.connection
     apply(connection.huex, method, [connection.bridge, light.number] ++ args)
     |> handle_response(light)
-  end
-
-  defp handle_response(%{status: :error} = response, _light) do
-    {:error, response.error["description"]}
-  end
-
-  defp handle_response(%{status: :ok}, light) do
-    {:ok, light}
   end
 end

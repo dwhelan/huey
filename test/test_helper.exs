@@ -6,6 +6,9 @@ excludes = [:skip]
 ExUnit.start(include: :focus, exclude: excludes, capture_log: true)
 
 defmodule Huey.TestFixture do
+  alias Huey.Connection
+  alias Huex.Bridge
+
   def host do
     "192.168.0.111"
   end
@@ -14,16 +17,16 @@ defmodule Huey.TestFixture do
     "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512"
   end
 
-  def connection(huex \\ Huex, bridge \\ bridge()) do
-    %Huey.Connection{bridge: bridge, huex: huex}
+  def connection(huex \\ Huex, %Bridge{} = bridge \\ bridge()) do
+    %Connection{bridge: bridge, huex: huex}
   end
 
   def bridge do
-    %Huex.Bridge{host: host(), username: username()}
+    %Bridge{host: host(), username: username()}
   end
 
   def bridge_error(message) do
-    %{
+    %Bridge{
       status: :error,
       error: %{
         "description" => message

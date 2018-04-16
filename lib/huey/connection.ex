@@ -1,6 +1,7 @@
 defmodule Huey.Connection do
   defstruct bridge: nil, huex: Huex
 
+  import Huey.Huex
   alias Huey.Connection
   alias Huex.Bridge
 
@@ -12,13 +13,5 @@ defmodule Huey.Connection do
   def create(host, username, huex \\ Huex) do
     bridge = %Bridge{host: host, username: username}
     %Connection{bridge: bridge, huex: huex}
-  end
-
-  defp handle_response(%{status: :error} = response, _light) do
-    {:error, response.error["description"]}
-  end
-
-  defp handle_response(_response, light) do
-    {:ok, light}
   end
 end
