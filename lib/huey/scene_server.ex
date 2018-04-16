@@ -49,8 +49,7 @@ defmodule Huey.SceneServer do
   end
 
   defp connection do
-    {:ok, bridge} = Bridge.connect("192.168.0.111", "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512")
-#    {:ok, bridge} = Bridge.connect("192.168.0.25", "nWLG30rEJAPxEgfffu3FMezYhfGtc7xbayy6mIyP")
+    bridge = Huex.connect("192.168.0.111", "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512")
     %Huey.Connection{bridge: bridge}
   end
 end

@@ -12,7 +12,7 @@ defmodule Huey.SceneServerTest do
   setup do
     light_states = [
       %Light{number: 1, color: %{h: 240, s: 254, b: 254}},
-      %Light{number: 3, color: %{h: 0, s: 254, b: 150}},
+      %Light{number: 3, color: %{h:   0, s: 254, b: 150}},
       %Light{number: 4, color: %{h: 260, s: 254, b: 150}},
       %Light{number: 5, color: %{h: 240, s: 254, b: 254}}
     ]
@@ -31,8 +31,8 @@ defmodule Huey.SceneServerTest do
   test "can create a new scene", context do
     light_states = [
       %Light{number: 1, color: %{h: 0, s: 254, b: 150}},
-      %Light{number: 3, color: %{h: 0, s: 0,   b: 254}},
-      %Light{number: 4, color: %{h: 0, s: 0,   b: 254}},
+      %Light{number: 3, color: %{h: 0, s:   0, b: 254}},
+      %Light{number: 4, color: %{h: 0, s:   0, b: 254}},
       %Light{number: 5, color: %{h: 0, s: 254, b: 150}}
     ]
     new_scene = %{oh_canada: light_states}
