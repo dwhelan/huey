@@ -4,7 +4,7 @@ defmodule Huey.SceneServer do
 
   use GenServer
 
-  alias Huey.{Bridge, Light, LightUpdater}
+  alias Huey.{Connection, Bridge, Light, LightUpdater}
 
   # Client API
 
@@ -49,7 +49,6 @@ defmodule Huey.SceneServer do
   end
 
   defp connection do
-    bridge = Huex.connect("192.168.0.111", "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512")
-    %Huey.Connection{bridge: bridge}
+    Connection.create("192.168.0.111", "FJtuwhryNZLot-HGCdn0KkV3A-T0m9ad1OmT-512")
   end
 end

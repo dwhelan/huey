@@ -5,6 +5,6 @@ defmodule Huey.Connection do
 
   def create(host, username, huex \\ Huex) do
     bridge = %Bridge{host: host, username: username}
-    {:ok, %Huey.Connection{bridge: bridge, huex: huex}}
+    %Huey.Connection{bridge: bridge, huex: huex}
   end
 end
