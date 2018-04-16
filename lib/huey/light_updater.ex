@@ -27,7 +27,7 @@ defmodule Huey.LightUpdater do
     {:error, response.error["description"]}
   end
 
-  defp handle_response(_response, light) do
+  defp handle_response(%{status: :ok}, light) do
     {:ok, light}
   end
 end

@@ -10,7 +10,7 @@ defmodule Huey.LightUpdaterTest do
         def turn_on(bridge, light_number) do
           assert bridge == TF.bridge()
           assert light_number == 42
-          {:ok, bridge}
+          bridge
         end
       end
 
@@ -38,6 +38,7 @@ defmodule Huey.LightUpdaterTest do
         def turn_off(bridge, light_number) do
           assert bridge == TF.bridge()
           assert light_number == 42
+          bridge
         end
       end
 
@@ -66,7 +67,7 @@ defmodule Huey.LightUpdaterTest do
           assert bridge == TF.bridge()
           assert light_number == 42
           assert hsb == {Huey.Color.hue_to_int(15), 16, 17}
-          {:ok, bridge}
+          bridge
         end
       end
 
@@ -95,7 +96,7 @@ defmodule Huey.LightUpdaterTest do
           assert bridge == TF.bridge()
           assert light_number == 42
           assert brightness == 0.5
-          {:ok, bridge}
+          bridge
         end
       end
 
